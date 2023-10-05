@@ -1,0 +1,27 @@
+defaults:
+  - _self_
+  - dataset: mini_pubtabnet
+  - model: encoderdecoder
+  - trainer: baseline
+  - override hydra/job_logging: colorlog
+  - override hydra/hydra_logging: colorlog
+
+
+hydra:
+  run:
+    dir: ../experiments/${name}
+  sweep:
+    dir: ../experiments/${name}
+  job:
+    name: ${name}
+    chdir: true
+
+vocab:
+  structure:
+    dir: ../vocab/vocab_structure.pt
+
+wandb:
+  project: ADP-Table
+
+
+seed: 1234

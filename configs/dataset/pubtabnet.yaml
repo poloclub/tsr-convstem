@@ -1,0 +1,11 @@
+root_dir: null
+json_html: PubTabNet_2.0.0.jsonl
+label_type: structure
+mean:
+  - 240.380
+  - 240.390
+  - 240.486
+std:
+  - 45.735
+  - 45.785
+  - 45.756

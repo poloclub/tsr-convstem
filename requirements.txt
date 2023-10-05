@@ -1,0 +1,14 @@
+torch
+torchvision
+torchaudio
+torchtext
+jsonlines
+beautifulsoup4
+matplotlib
+hydra-core
+hydra_colorlog
+apted
+Distance
+lxml==4.9.3
+torchmetrics
+wandb

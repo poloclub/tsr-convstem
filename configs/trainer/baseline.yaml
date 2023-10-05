@@ -1,0 +1,26 @@
+defaults:
+  - _self_
+  - train/lr_scheduler: step
+  - train/optimizer: adam
+
+
+mode: train
+img_size: 448
+max_seq_len: 512
+snapshot: null
+train:
+  target: structure
+  grad_clip: 5
+  batch_size: 128
+  epochs: 24
+  save_every: 3
+valid:
+  target: ${trainer.train.target}
+  batch_size: 128
+  max_seq_len: ${trainer.max_seq_len}
+test:
+  target: ${trainer.train.target}
+  metrics: teds
+  max_seq_len: ${trainer.max_seq_len}
+  save_to: html_table_result.json
+  model: null
