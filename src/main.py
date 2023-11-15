@@ -32,7 +32,7 @@ def main(cfg: DictConfig):
     if device == 0 and cfg.trainer.mode == "train":
         wandb.init(project=cfg.wandb.project, name=cfg.name, resume=True)
 
-    # vocab
+    # load html tag vocab
     vocab_structure = torch.load(cwd / cfg.vocab.structure.dir)
     padding_idx = vocab_structure(["<pad>"])[0]
 
@@ -106,12 +106,14 @@ def main(cfg: DictConfig):
         model_weights=Path(cfg.trainer.test.model) if cfg.trainer.test.model else None,
     )
 
+    # training
     if cfg.trainer.mode == "train":
         log.info(printer(device, "Training starts ..."))
         trainer.train(
             train_dataloader, valid_dataloader, cfg.trainer.train, cfg.trainer.valid
         )
 
+    # testing
     if cfg.trainer.mode == "test":
         log.info(printer(device, "Evaluation starts ..."))
         trainer.test(valid_dataloader, cfg.trainer.test)

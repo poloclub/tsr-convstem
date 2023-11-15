@@ -36,17 +36,23 @@ BEST_MODEL = "../$*/model/best.pt"
 RESULT_JSON := html_table_result.json
 TEDS_STRUCTURE = -f "../experiments/$*/$(RESULT_JSON)" -s
 
+#
 # Experiment Configurations
+#
+
+# CNN backbone: resnet-18, resnet-34, and resnet-50
 EXP_r18_e2_d4_adamw := $(PUBTABNET) $(MODEL_r18_e2_d4) $(OPT_adamw) ++trainer.train.batch_size=64 ++trainer.valid.batch_size=64
 EXP_r34_e2_d4_adamw := $(PUBTABNET) $(MODEL_r34_e2_d4) $(OPT_adamw) ++trainer.train.batch_size=64 ++trainer.valid.batch_size=32
 EXP_r50_e2_d4_adamw := $(PUBTABNET) $(MODEL_r50_e2_d4) $(OPT_adamw) ++trainer.train.batch_size=32 ++trainer.valid.batch_size=16
 
+# linear projection
 EXP_p14_e4_d4_nhead8_adamw := $(PUBTABNET) $(MODEL_p14_e4_d4_nhead8) $(OPT_adamw)
 EXP_p16_e4_d4_nhead8_adamw := $(PUBTABNET) $(MODEL_p16_e4_d4_nhead8) $(OPT_adamw)
 EXP_p28_e4_d4_nhead8_adamw := $(PUBTABNET) $(MODEL_p28_e4_d4_nhead8) $(OPT_adamw)
 EXP_p56_e4_d4_nhead8_adamw := $(PUBTABNET) $(MODEL_p56_e4_d4_nhead8) $(OPT_adamw)
 EXP_p112_e4_d4_nhead8_adamw := $(PUBTABNET) $(MODEL_p112_e4_d4_nhead8) $(OPT_adamw)
 
+# convolutional stem
 EXP_cs_c384_e4_d4_nhead8_adamw := $(PUBTABNET) $(MODEL_cs_c384_e4_d4_nhead8) $(OPT_adamw) ++trainer.train.batch_size=64
 EXP_cs_c384_k5_e4_d4_nhead8_i476_adamw := $(PUBTABNET) $(MODEL_cs_c384_k5_e4_d4_nhead8_i476) $(OPT_adamw) ++trainer.train.batch_size=64
 EXP_cs_c192_p8_k5_e4_d4_nhead8_i224_adamw := $(PUBTABNET) $(MODEL_cs_c192_p8_k5_e4_d4_nhead8_i224) $(OPT_adamw) ++trainer.train.batch_size=64
@@ -60,16 +66,19 @@ NGPU := 1
 
 .SECONDARY:
 
+# train the model with EXP_<name> above
 experiments/%/.done_train_structure:
 > @echo "Using experiment configurations from variable EXP_$*"
 > cd $(SRC) && $(TORCHRUN) -m main ++name=$* $(EXP_$*) ++trainer.mode="train"
 > touch $@
 
+# test the trained model and save the predictions to json
 experiments/%/.done_test_structure: experiments/%/.done_train_structure
 > @echo "Using experiment configurations from variable EXP_$*"
 > cd $(SRC) && $(TORCHRUN) -m main ++name=$* $(EXP_$*) ++trainer.mode="test" ++trainer.test.model=$(BEST_MODEL)
 > touch $@
 
+# compute teds score by loading the json of predictions and ground truth
 experiments/%/.done_teds_structure: experiments/%/.done_test_structure
 > cd $(SRC) && $(PYTHON) -m utils.teds $(TEDS_STRUCTURE)
 > touch $@
