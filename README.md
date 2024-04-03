@@ -15,6 +15,8 @@
 
 Table structure recognition (TSR) aims to convert tabular images into a machine-readable format, where a visual encoder extracts image features and a textual decoder generates table-representing tokens. Existing approaches use classic convolutional neural network (CNN) backbones for the visual encoder and transformers for the textual decoder. However, this hybrid CNN-Transformer architecture introduces a complex visual encoder that accounts for nearly half of the total model parameters, markedly reduces both training and inference speed, and hinders the potential for self-supervised learning in TSR. In this work, we design a lightweight visual encoder for TSR without sacrificing expressive power. We discover that a convolutional stem can match classic CNN backbone performance, with a much simpler model. The convolutional stem strikes an optimal balance between two crucial factors for high-performance TSR: a higher receptive field (RF) ratio and a longer sequence length. This allows it to "see" an appropriate portion of the table and "store" the complex table structure within sufficient context length for the subsequent transformer. 
 
+> Our latest work [UniTable](https://github.com/poloclub/unitable) has been fully released, achieving SOTA performance on four of the largest table recognition datasets! We have also released the first-of-its-kind Jupyter Notebook of the entire inference pipeline, which can fully digitalize your tabular image to HTML!
+
 ## News
 `Oct. 2023` - Paper accepted by [NeurIPS'23 Table Representation Learning Workshop](https://table-representation-learning.github.io/)
 
